@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi import HTTPException
 import shutil
 import os
 
@@ -66,7 +67,7 @@ if os.path.exists(frontend_path):
         ]
 
         if any(full_path.startswith(route) for route in backend_routes):
-            return {"detail": "Not Found"}
+    raise HTTPException(status_code=404, detail="Not Found")
 
         requested_file = os.path.join(frontend_path, full_path)
 
