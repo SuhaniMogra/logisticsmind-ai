@@ -1,12 +1,8 @@
 import axios from "axios";
 
-const API_BASE =
-  window.location.hostname.includes("railway.app")
-    ? window.location.origin
-    : "http://localhost:8000";
-
+// FORCE LOCAL BACKEND
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: "http://127.0.0.1:8000",
 });
 
 // Research Agent
@@ -14,6 +10,7 @@ export const researchQuery = async (query) => {
   const response = await api.post("/research", null, {
     params: { query },
   });
+
   return response.data;
 };
 

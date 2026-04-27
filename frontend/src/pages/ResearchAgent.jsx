@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Play } from "lucide-react";
 import { researchQuery } from "../services/api";
 import { incrementResearchReports } from "../services/stats";
+
 function ResearchAgent() {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState("");
@@ -23,11 +24,15 @@ function ResearchAgent() {
 
       const response = await researchQuery(query);
 
-      setResult(response.data.summary || "No summary 	returned.");
+      console.log("RESEARCH RESPONSE:", response);
+
+      // FIXED: backend already returns direct JSON, not response.data.data
+      setResult(response.summary || "No summary returned.");
+
       incrementResearchReports();
       window.dispatchEvent(new Event("statsUpdated"));
     } catch (error) {
-      console.error(error);
+      console.error("Research Error:", error);
       setResult("Error fetching research.");
     } finally {
       setLoading(false);
@@ -187,7 +192,8 @@ function ResearchAgent() {
             whiteSpace: "pre-wrap",
           }}
         >
-          {result || "No reports yet\n\nRun a research query above to generate and save your first report."}
+          {result ||
+            "No reports yet\n\nRun a research query above to generate and save your first report."}
         </div>
       </div>
     </div>

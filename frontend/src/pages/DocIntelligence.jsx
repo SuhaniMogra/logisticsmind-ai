@@ -21,16 +21,21 @@ function DocIntelligence() {
   const handleUpload = async () => {
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const response = await uploadDocument(formData);
-      setUploadMessage(response.data.message);
+      // FIXED: pass raw file, api.js handles FormData
+      const response = await uploadDocument(file);
+
+      console.log("UPLOAD RESPONSE:", response);
+
+      // FIXED: backend returns direct JSON
+      setUploadMessage(
+        response.message || "Document uploaded and indexed successfully."
+      );
+
       incrementIndexedDocs();
       window.dispatchEvent(new Event("statsUpdated"));
     } catch (error) {
-      console.error(error);
+      console.error("Upload Error:", error);
       setUploadMessage("Upload failed.");
     }
   };
@@ -43,9 +48,12 @@ function DocIntelligence() {
 
       const response = await askDocument(question);
 
-      setAnswer(response.data.answer || "No answer returned.");
+      console.log("ASK RESPONSE:", response);
+
+      // FIXED: backend direct JSON
+      setAnswer(response.answer || "No answer returned.");
     } catch (error) {
-      console.error(error);
+      console.error("Ask Error:", error);
       setAnswer("Error fetching answer.");
     } finally {
       setLoading(false);
@@ -163,7 +171,9 @@ function DocIntelligence() {
               SAMPLE QUESTIONS
             </h3>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
               {sampleQuestions.map((q, index) => (
                 <button
                   key={index}
