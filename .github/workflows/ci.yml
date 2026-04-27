@@ -49,4 +49,4 @@ jobs:
 
       # ---------------- DOCKER ----------------
       - name: Build Docker Image
-        run: docker build -t logisticsmind .```
+        run: docker build -t logisticsmind .
