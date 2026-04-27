@@ -1,0 +1,9 @@
+node_modules
+venv
+__pycache__
+.git
+.env
+frontend/node_modules
+backend/__pycache__
+backend/faiss_index
+backend/storage
