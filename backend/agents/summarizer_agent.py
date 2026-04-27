@@ -21,7 +21,7 @@ def summarize_results(query, research_data):
     """
 
     response = client.chat.completions.create(
-        model=model="openai/gpt-3.5-turbo",
+        model="openai/gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
 
