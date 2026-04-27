@@ -8,7 +8,13 @@ client = OpenAI(
 
 
 def summarize_results(query, results):
-    combined_text = "\n".join(results[:10])
+    combined_text = "\n".join(
+    [
+        item["content"] if isinstance(item, dict) and "content" in item
+        else str(item)
+        for item in results[:10]
+    ]
+)
 
     prompt = f"""
     Summarize the following research for: {query}
