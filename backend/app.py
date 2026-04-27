@@ -33,6 +33,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# API HEALTH ROUTE
+@app.get("/api")
+def home():
+    return {"message": "LogisticsMind Backend Running Successfully"}
+
+
 # Serve React frontend if Docker build exists
 if os.path.exists(frontend_path):
 
@@ -67,7 +73,7 @@ if os.path.exists(frontend_path):
         ]
 
         if any(full_path.startswith(route) for route in backend_routes):
-    raise HTTPException(status_code=404, detail="Not Found")
+            raise HTTPException(status_code=404, detail="Not Found")
 
         requested_file = os.path.join(frontend_path, full_path)
 
@@ -77,12 +83,6 @@ if os.path.exists(frontend_path):
 
         # Otherwise React handles route
         return FileResponse(os.path.join(frontend_path, "index.html"))
-
-
-# API HEALTH ROUTE
-@app.get("/api")
-def home():
-    return {"message": "LogisticsMind Backend Running Successfully"}
 
 
 # RESEARCH AGENT
