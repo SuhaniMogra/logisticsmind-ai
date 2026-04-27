@@ -1,28 +1,40 @@
 from openai import OpenAI
-from config import OPENAI_API_KEY
+from config import OPENAI_API_KEY, OPENAI_BASE_URL
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(
+    api_key=OPENAI_API_KEY,
+    base_url=OPENAI_BASE_URL
+)
 
-def summarize_results(query, research_data):
-    combined_text = "\n".join([item["content"] for item in research_data])
+
+def summarize_results(query, results):
+    combined_text = "\n".join(results[:10])
 
     prompt = f"""
-    Research Query: {query}
+    Summarize the following research for: {query}
 
-    Based on the following research:
+    Research Data:
     {combined_text}
 
-    Generate:
-    1. Executive Summary
-    2. Key Insights
-    3. Risks
-    4. Opportunities
-    5. Final Conclusion
+    Provide:
+    - Key trends
+    - Risks
+    - Opportunities
+    - Future outlook
     """
 
     response = client.chat.completions.create(
         model="openai/gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a logistics and supply chain research analyst."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
     )
 
     return response.choices[0].message.content
