@@ -9,15 +9,14 @@ on:
       - "**"
 
 jobs:
-  build-test-docker:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout Code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # ---------------- FRONTEND ----------------
+      # FRONTEND
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,7 +30,7 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      # ---------------- BACKEND ----------------
+      # BACKEND
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -39,14 +38,19 @@ jobs:
 
       - name: Install Backend Dependencies
         working-directory: backend
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Validate Backend Imports
         working-directory: backend
-        run: |
-          python -c "import app"
+        run: python -c "import app"
 
-      # ---------------- DOCKER ----------------
+  docker:
+    needs: build-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Build Docker Image
         run: docker build -t logisticsmind .

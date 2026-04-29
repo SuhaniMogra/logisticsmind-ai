@@ -1,8 +1,14 @@
 import axios from "axios";
 
-// FORCE LOCAL BACKEND
+// AUTO-DETECT AWS / LOCAL / DOMAIN
+const API_BASE =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : window.location.origin;
+
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: API_BASE,
 });
 
 // Research Agent
